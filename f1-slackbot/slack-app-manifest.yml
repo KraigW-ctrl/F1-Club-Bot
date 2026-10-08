@@ -1,0 +1,19 @@
+display_information:
+  name: F1 Club Bot
+  description: Race week reminders and breaking F1 news for #formula1-club
+  background_color: "#e10600"
+features:
+  bot_user:
+    display_name: F1 Club Bot
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - chat:write          # post messages
+      - files:write         # upload standings screenshots
+      - channels:history    # check what's already been posted (public channel)
+      - groups:history      # same, if #formula1-club is private
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
