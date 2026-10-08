@@ -1,0 +1,37 @@
+name: F1 Breaking news
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Post a [TEST] sample (uses latest article if nothing is Breaking)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: f1-breaking
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: f1-slackbot
+
+jobs:
+  breaking:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: f1-slackbot/requirements.txt
+      - run: pip install slack_sdk requests beautifulsoup4 tzdata
+      - name: Check for breaking news
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+        run: python bot.py breaking ${{ inputs.test && '--test' || '' }}
